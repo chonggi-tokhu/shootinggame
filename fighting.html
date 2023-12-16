@@ -90,7 +90,7 @@
         var chunks=[];
         var recordedgamevideofile;
         var downloadlinkurl;
-        var recordgame = new MediaRecorder(startCapture());
+        var recordgame = new MediaRecorder(startCapture().then(function(err){if (err) console.log(err);}));
         recordgame.addEventListener("dataavailable",function(e){
             chunks.push(e.data);
             var blob = new Blob(chunks);
