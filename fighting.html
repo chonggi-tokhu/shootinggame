@@ -75,11 +75,22 @@
         </div>
     </div>
     <script src="./files/js/guns.js"></script>
-    <script>
+    <script>async function startCapture() {
+            let captureStream;
+
+            try {
+                captureStream =
+                    await navigator.mediaDevices.getDisplayMedia();
+            } catch (err) {
+                console.error(`Error: ${err}`);
+            }
+            return captureStream;
+        }
+
         var chunks=[];
         var recordedgamevideofile;
         var downloadlinkurl;
-        var recordgame = new MediaRecorder(await navigator.mediaDevices.getDisplayMedia());
+        var recordgame = new MediaRecorder(startCapture());
         recordgame.addEventListener("dataavailable",function(e){
             chunks.push(e.data);
             var blob = new Blob(chunks);
