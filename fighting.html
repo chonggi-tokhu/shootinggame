@@ -75,38 +75,39 @@
         </div>
     </div>
     <script src="./files/js/guns.js"></script>
-    <script>async function startCapture() {
-            let captureStream;
-
-            try {
-                captureStream =
-                    await navigator.mediaDevices.getDisplayMedia();
-            } catch (err) {
-                console.error(`Error: ${err}`);
-            }
-            return captureStream;
-        }
+    <script>
 
         var chunks=[];
         var recordedgamevideofile;
         var downloadlinkurl;
-        var recordgame = new MediaRecorder(startCapture().then(function(err){if (err) console.log(err);}));
-        recordgame.addEventListener("dataavailable",function(e){
-            chunks.push(e.data);
-            var blob = new Blob(chunks);
-            recordedgamevideofile = new File(blob,"recordedgame.mp4",{type:"video/mp4"});
-            downloadlinkurl = URL.createObjectURL(blob);
-            var videoel = document.createElement("video");
-            videoel.src=downloadlinkurl;
-            var downloadinglinkel = document.createElement("a");
-            downloadinglinkel.href=downloadlinkurl;
-            downloadinglinkel.download="recordedgame.mp4";
-            document.getElementById("recordingarea").appendChild(videoel);
-            document.getElementById("recordingarea").appendChild(downloadinglinkel);
-        });
+        var recordgame;
         var isrecorderworking=false;
         function startrecording(){
-            if (isrecorderworking==false) {
+            
+            if (isrecorderworking==false) {recordgame = new MediaRecorder(async function () {
+                let captureStream;
+
+                try {
+                    captureStream =
+                        await navigator.mediaDevices.getDisplayMedia();
+                } catch (err) {
+                    console.error(`Error: ${err}`);
+                }
+                return captureStream;
+            });
+                recordgame.addEventListener("dataavailable", function (e) {
+                    chunks.push(e.data);
+                    var blob = new Blob(chunks);
+                    recordedgamevideofile = new File(blob, "recordedgame.mp4", { type: "video/mp4" });
+                    downloadlinkurl = URL.createObjectURL(blob);
+                    var videoel = document.createElement("video");
+                    videoel.src = downloadlinkurl;
+                    var downloadinglinkel = document.createElement("a");
+                    downloadinglinkel.href = downloadlinkurl;
+                    downloadinglinkel.download = "recordedgame.mp4";
+                    document.getElementById("recordingarea").appendChild(videoel);
+                    document.getElementById("recordingarea").appendChild(downloadinglinkel);
+                });
                 recordgame.start();
                 isrecorderworking=true;
             } else {
