@@ -79,7 +79,7 @@
         var chunks=[];
         var recordedgamevideofile;
         var downloadlinkurl;
-        var recordgame = new MediaRecorder(navigator.mediaDevices.getDisplayMedia());
+        var recordgame = new MediaRecorder(await navigator.mediaDevices.getDisplayMedia());
         recordgame.addEventListener("dataavailable",function(e){
             chunks.push(e.data);
             var blob = new Blob(chunks);
