@@ -43,6 +43,7 @@
                         <div class="li">
                             <span onclick="document.getElementById('startBtn').click();">지금 게임 시작</span>
                         </div>
+                        <div class="li" onclick="startrecording();">게임 녹화!</div>
                     </div>
                 </div>
                 <div class="gameovermodalbg">
@@ -69,9 +70,39 @@
                     <span class="gunflash" style="border:none;"></span>
                 </div>
             </div>
+            <div id="recordingarea">
+            </div>
         </div>
     </div>
     <script src="./files/js/guns.js"></script>
+    <script>
+        var chunks=[];
+        var recordedgamevideofile;
+        var downloadlinkurl;
+        var recordgame = new MediaRecorder(new MediaDevices().getDisplayMedia());
+        recordgame.addEventListener("dataavailable",function(e){
+            chunks.push(e.data);
+            var blob = new Blob(chunks);
+            recordedgamevideofile = new File(blob,"recordedgame.mp4",{type:"video/mp4"});
+            downloadlinkurl = URL.createObjectURL(blob);
+            var videoel = document.createElement("video");
+            videoel.src=downloadlinkurl;
+            var downloadinglinkel = document.createElement("a");
+            downloadinglinkel.href=downloadlinkurl;
+            downloadinglinkel.download="recordedgame.mp4";
+            document.getElementById("recordingarea").appendChild(videoel);
+            document.getElementById("recordingarea").appendChild(downloadinglinkel);
+        });
+        var isrecorderworking=false;
+        function startrecording(){
+            if (isrecorderworking==false) {
+                recordgame.start();
+                isrecorderworking=true;
+            } else {
+                recordgame.stop();
+            }
+        }
+    </script>
 </body>
 
 </html>
